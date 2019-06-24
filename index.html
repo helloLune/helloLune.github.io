@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>что то</title>
+	<link rel="stylesheet" href="styles.css">
+	<script src="https://cdn.socket.io/socket.io-1.2.1.js"></script>
+	<script >
+		//var api = new WebSocket('wss://ws.coincap.io/trades/binance');
+		//api.onmessage = function(msg){
+		//	console.log(msg.data);
+		//};
+	</script>
+
+<script>
+	function get_price (text) {
+			var price = new WebSocket('wss://ws.coincap.io/prices?assets='+text+'&interval=d1');
+			price.onmessage = function(msg){
+				var answer = msg.data.prices;
+				console.log(msg.data);
+				var i = JSON.parse(answer);
+			}
+			return this.i;  
+		}
+</script>
+</head>
+<body scroll="no">
+	<div class="grid">
+		<!--<div class="before_app"></div>-->
+		<div class="app_place">
+			<div id="app">
+		 		<div class="list_item"v-for="item in product">
+		 			<h1>
+		 				{{item.price}}
+		 			</h1>
+		 		</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+
+
+
+
+
+
+
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script>
+		var app = new Vue({
+	el: '#app',
+	data:{
+		product : [
+		{price: get_price('bitcoin')},
+		{price: get_price('ethereum')},
+		{price: get_price('monero')},
+		]
+	},
+	
+
+});
+	</script>
+
+</body>
+</html>

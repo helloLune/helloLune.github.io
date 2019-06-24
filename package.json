@@ -1,0 +1,10 @@
+{
+	"name":"bitcoin-checker",
+	"version":"0.0.1",
+  "devDependencies": {
+    "canvas-chart": "~1.3.0"
+  },
+  "dependencies": {
+    "socket.io": "^2.2.0"
+  }
+}
