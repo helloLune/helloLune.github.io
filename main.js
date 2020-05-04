@@ -96,9 +96,9 @@ let eWeb = ()=>
 	    return arr[rand];
 	}
 	class Dote{
-		constructor(text)
-		{
-			this.__rSet()
+		constructor(e)
+		{	e = e || 0
+			this.__rSet(e)
 			this.text = __re(['+','-'])
 		}
 		__update = (_)=>
@@ -113,10 +113,10 @@ let eWeb = ()=>
 			this.y += Math.random()
 			if(0  >= this.x || this.x >= _w || 0  >= this.y || this.y >= _h) this.__rSet() 
 		}
-		__rSet()
+		__rSet(e)
 		{	
-			this.x = Math.random()*_w
-			this.y = Math.random()*_h
+			this.x = e ? e.x : Math.random()*_w
+			this.y = e ? e.y : Math.random()*_h
 		}
 		__draw(_)
 		{
@@ -199,22 +199,26 @@ let eWeb = ()=>
 	/*
 		events
 	*/
-	onmousedown = ()=>
-	{__md=!__md}
+	let __crtD = (e) =>
+	{
+		!(_dl.length > 260)&&_prp.mlngth ? _dl.push(new Dote(e)) : __aClr()
+		return _prp.mlngth -= 2	
+	}
+	onclick = e =>
+	{
+		__crtD(e)
+	}
 	onkeydown = e => 
 	{
 		if(e.keyCode == 189) //minus | delete dote 
 		{ 
-			_dl.length ? _dl.pop() : ()=>{return _dl = []}
-			if(_prp.mlngth > _w/4) return __aClr()
-			return _prp.mlngth++
+			_dl.length-1 ? _dl.pop() : __aClr()
+			return _prp.mlngth += 2
 			
 		}
 		if(e.keyCode == 187) //plus | new dote
 		{ 
-			_dl.length > 150 ? ()=>{} : _dl.push(new Dote());
-			if(!_prp.mlngth) return __aClr()
-			return _prp.mlngth--
+			return __crtD()
 		} 
 		if(e.keyCode == 32) //space | stop
 		{ 
