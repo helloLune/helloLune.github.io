@@ -90,12 +90,16 @@ let eWeb = ()=>
 	  	let _r = mn + Math.random() * (mx + 1 - mn);
 	  	return _r;
 	}
-
+	let __re = arr=> 
+	{
+	    let rand = Math.floor(Math.random() * arr.length);
+	    return arr[rand];
+	}
 	class Dote{
-		constructor()
+		constructor(text)
 		{
 			this.__rSet()
-			this.text = _k.pop()
+			this.text = __re(['+','-'])
 		}
 		__update = (_)=>
 		{
@@ -105,9 +109,9 @@ let eWeb = ()=>
 		__offset()
 		{
 			if(__md) return
-			this.x += Math.random()*_prp.vel
-			this.y += Math.random()*_prp.vel
-			if((0  >= this.x || this.x >= _w) || (0  >= this.y || this.y >= _h)) this.__rSet() 
+			this.x += Math.random()
+			this.y += Math.random()
+			if(0  >= this.x || this.x >= _w || 0  >= this.y || this.y >= _h) this.__rSet() 
 		}
 		__rSet()
 		{	
@@ -119,16 +123,11 @@ let eWeb = ()=>
 			_ = _ || 0.8
 			_ct.beginPath()
 			_ct.arc(this.x,this.y,_prp.r,0,360)
-			_ct.font = _prp.r*6 +'px Consolas'
 			_ct.fillText(this.text,this.x-4*_prp.r,this.y-2*_prp.r)
-			_ct.closePath()
-			_ct.fillStyle = _prp.clr+(_+0.44)+')'
+			_ct.fillStyle = _prp.clr+Math.abs(Math.sin(_))+')'
 			_ct.stroke()
+			_ct.closePath()
 		}
-	}
-	let __clr = ()=>
-	{
-		_ct.clearRect(0,0,_w,_h)
 	}
 	let __cL = (_1,_2,_o) =>
 	{
@@ -138,21 +137,19 @@ let eWeb = ()=>
 			_ct.lineCap = 'round'
 			_ct.lineWidth = _prp.r/4
 			_ct.lineJoin = "round"
-			_ct.strokeStyle = _prp.clr + Math.abs(Math.sin(_o+1e2)) +')'
+			_ct.strokeStyle = _prp.clr + Math.abs(Math.sin(_o)) +')'
 			_ct.moveTo(_1.x,_1.y)
 			_ct.lineTo(_2.x,_2.y)
 			_ct.stroke()
 		}
-		_2.__update(_o);
-
 	}
 	let __int = () =>
 	{	//init
+		__res()
 		for(let _ of Array(_prp.dts).keys()) _dl.push(new Dote())
 	}
 	let __res = () =>
 	{	//restore
-		__clr()
 		_h = _cv.height = innerHeight
 		_w = _cv.width = innerWidth
 		_prp.mlngth = _w/8
@@ -169,49 +166,53 @@ let eWeb = ()=>
 		}
 		requestAnimationFrame(__upd)
 	}
-	let __ab = _m =>
-	{
-		let _s = []
-		for(let _ of _m) _s.push(Math.abs(_))
-		return _s
-	}
 	let __gD = (_1,_2)=>
 	{
 		return Math.sqrt((_2.x-_1.x)**2+(_2.y-_1.y)**2)
 	}
 	let
 		_prp = {
-			r: 1, //radius
-			wl: 1, //wave length
-			dts: 100, //dotes
+			r: 5, //radius
+			dts: 90, //dotes
 			mlngth: 0, //min space length for create line
 			clr: 'rgba(255,'+__r(0,255)+','+__r(0,80)+',',
-			loop: true,
-			vel: 1/10
+			loop: true
 		},
-		_k=[], //keys
 		_h, //heigth
 		_w, //width
 		_dl = [], //dote list
 		__md = false,
 		__l = console.log,
 		_cv = document.createElement('canvas'), //canvas
-		_ct = _cv.getContext('2d');//context
-		for(let _ of Array(_prp.dts/2).keys()) _k.push('+','-')
+		_ct = _cv.getContext('2d'),//context
+		__clr = ()=>{_ct.clearRect(0,0,_w,_h)};
 	document.body.appendChild(_cv)
 	window.onresize = __res
-	__res()
 	__int()
 	requestAnimationFrame(__upd)
 	/*
-	
-		mouse events
-
+		events
 	*/
 	onmousedown = ()=>
-	{__md=true}
-	onmouseup = ()=>
-	{__md=false}
+	{__md=!__md}
+	onkeydown = e => 
+	{
+		if(e.keyCode == 189){
+			_dl.length ? _dl.pop() : ()=>{return _dl = []}
+			if(_prp.mlngth < _w)_prp.mlngth++;
+			return;
+			//minus | delete dote
+		}
+		if(e.keyCode == 187){
+			_dl.length > 150 ? ()=>{} : _dl.push(new Dote());
+			if(_prp.mlngth > 0) _prp.mlngth--;
+			return;//plus | new dote
+		} 
+		if(e.keyCode == 32){
+			__md=!__md
+			return;//space | stop
+		} 
+	}	
 
 }
 eWeb()
