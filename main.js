@@ -1,3 +1,81 @@
+//entry point
+let wave = ()=>{
+	class Dote{
+		constructor(x,y,num){
+			this.x = x
+			this.y = y
+			this.num = num
+			this.scale = __gD(x,y)/_prp.wl
+			this.draw()
+		}
+		update(){
+			this.resize()
+			this.draw()
+		}
+		resize(){
+			this.scale = this.scale - _prp.vel
+		}
+		draw(){
+			let _r = _prp.r * (1-Math.abs(Math.sin(this.scale)))
+			_ct.beginPath()
+			_ct.arc(this.x,this.y,_r,0,360)
+			_ct.closePath()
+			_ct.fillStyle = 'rgba(255,90,0' +Math.abs(Math.sin(this.scale))+')'
+			_ct.fill()
+			//_ct.fillText('x',this.x,this.y)
+		}
+	}
+	let __gD = (x,y) =>
+	{
+		let dx = _w/2 - x
+		let dy = _h/2 - y
+		return Math.sqrt((dx*dx)+(dy*dy))
+	}
+	let __int = () =>
+	{	//init
+		let _strX = (_prp.d + _w - _cX*_prp.d)/2
+		let _strY = (_prp.d + _h - _cY*_prp.d)/2
+		for(let _ of Array(_cY).keys()){
+			let _y = _strY + _*_prp.d
+			for(let __ of Array(_cX).keys()){ 
+				let _x = _strX + __*_prp.d
+				_dl.push(new Dote(_x,_y,__+_ | 1))
+			}
+		}
+	}
+	let __res = () =>
+	{	//restore
+		_ct.clearRect(0,0,_w,_h)
+		_h = _cv.height = innerHeight
+		_w = _cv.width = innerWidth
+		_cX = Math.floor(_w/_prp.d)
+		_cY = Math.floor(_h/_prp.d)
+		__int()
+	}
+	let __upd = () => 
+	{	
+		_ct.clearRect(0,0,_w,_h)
+		for(let _ of _dl) _.update()
+		requestAnimationFrame(__upd)
+	}
+	let
+		_prp = {
+			r: 5, //radius
+			d: 10, //diameter
+			wl: 50, //wave length
+			vel: .2 //velocity
+		},
+		_h, //heigth
+		_w, //width
+		_dl = [], //dote list
+		_cX, //x count
+		_cY, //y count
+		_cv = document.createElement('canvas'), //canvas
+		_ct = _cv.getContext('2d');//context
+	document.body.appendChild(_cv)
+	window.onresize = __res
+	__res()
+	requestAnimationFrame(__upd)
 }
 /*
 
