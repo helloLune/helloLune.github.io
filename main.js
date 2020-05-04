@@ -1,6 +1,4 @@
 }
-let __ec = (a,o) =>
-{
 /*
 
 	canvas web
