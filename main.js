@@ -154,6 +154,12 @@ let eWeb = ()=>
 		_w = _cv.width = innerWidth
 		_prp.mlngth = _w/8
 	}
+	let __aClr = () =>
+	{
+		__clr()
+		_dl = []
+		__int()
+	}
 	let __upd = () => 
 	{	//update
 		__clr()
@@ -197,20 +203,22 @@ let eWeb = ()=>
 	{__md=!__md}
 	onkeydown = e => 
 	{
-		if(e.keyCode == 189){
+		if(e.keyCode == 189) //minus | delete dote 
+		{ 
 			_dl.length ? _dl.pop() : ()=>{return _dl = []}
-			if(_prp.mlngth < _w)_prp.mlngth++;
-			return;
-			//minus | delete dote
+			if(_prp.mlngth > _w/4) return __aClr()
+			return _prp.mlngth++
+			
 		}
-		if(e.keyCode == 187){
+		if(e.keyCode == 187) //plus | new dote
+		{ 
 			_dl.length > 150 ? ()=>{} : _dl.push(new Dote());
-			if(_prp.mlngth > 0) _prp.mlngth--;
-			return;//plus | new dote
+			if(!_prp.mlngth) return __aClr()
+			return _prp.mlngth--
 		} 
-		if(e.keyCode == 32){
-			__md=!__md
-			return;//space | stop
+		if(e.keyCode == 32) //space | stop
+		{ 
+			return __md=!__md
 		} 
 	}	
 
