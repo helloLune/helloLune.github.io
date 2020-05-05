@@ -103,7 +103,7 @@ let eWeb = ()=>
 		}
 		__update = (_)=>
 		{
-			if(_prp.loop) this.__offset()
+			if(!__md) this.__offset()
 			this.__draw(_)
 		}
 		__offset()
@@ -120,24 +120,27 @@ let eWeb = ()=>
 		}
 		__draw(_)
 		{
-			_ = _ || 0.8
+			_ = _ || 1
 			_ct.beginPath()
+			_ct.fillStyle = _ct.strokeStyle = _prp.clr+Math.abs(
+				Math.sin(_)
+			)+')'
 			_ct.arc(this.x,this.y,_prp.r,0,360)
 			_ct.fillText(this.text,this.x-4*_prp.r,this.y-2*_prp.r)
-			_ct.fillStyle = _prp.clr+Math.abs(Math.sin(_))+')'
 			_ct.stroke()
 			_ct.closePath()
 		}
 	}
 	let __cL = (_1,_2,_o) =>
-	{
+	{	
 		if(_1.text == _2.text) return
 		if(_o <= _prp.mlngth && _o){
 			_ct.beginPath()
 			_ct.lineCap = 'round'
 			_ct.lineWidth = _prp.r/4
 			_ct.lineJoin = "round"
-			_ct.strokeStyle = _prp.clr + Math.abs(Math.sin(_o)) +')'
+			_o = __gtO(_o)
+			_ct.strokeStyle = _prp.clr + _o+')'//((__o < 0.5) ? (__o+')') : (Math.abs(Math.sin(_o/2))+')'))
 			_ct.moveTo(_1.x,_1.y)
 			_ct.lineTo(_2.x,_2.y)
 			_ct.stroke()
@@ -146,13 +149,16 @@ let eWeb = ()=>
 	let __int = () =>
 	{	//init
 		__res()
+		__stRclr()
 		for(let _ of Array(_prp.dts).keys()) _dl.push(new Dote())
 	}
 	let __res = () =>
 	{	//restore
 		_h = _cv.height = innerHeight
 		_w = _cv.width = innerWidth
-		_prp.mlngth = _w/8
+		_prp.mlngth = _h/9
+		_prp.r = _h/170
+		_ct.font = `${_prp.r*2}px Arial`
 	}
 	let __aClr = () =>
 	{
@@ -160,9 +166,34 @@ let eWeb = ()=>
 		_dl = []
 		__int()
 	}
+	let __stRclr = ()=>
+	{
+		_prp.clr = 'rgba(255,'+__r(0,255)+','+__r(0,255)+',' 
+	}
+	let __as = _ =>
+	{
+		return Math.abs(Math.sin(_))
+	}
+	let __gtO = _ =>
+	{
+		return  (_ ? 
+					(Math.abs(
+						Math.sin(
+							(__as(_/7e2)+__gtO())/2
+						)
+					)) 
+					: 
+					Math.abs(
+						Math.cos(
+							new Date().getTime()/5e3 
+						)
+					)
+				)
+	}
 	let __upd = () => 
 	{	//update
 		__clr()
+		if(0.01>__gtO()) __stRclr();
 		for(let _ of _dl){ 
 			for(let __ of _dl){
 				let ___ = __gD(_,__)
@@ -178,20 +209,19 @@ let eWeb = ()=>
 	}
 	let
 		_prp = {
-			r: 5, //radius
+			r: 0, //radius
 			dts: 90, //dotes
 			mlngth: 0, //min space length for create line
-			clr: 'rgba(255,'+__r(0,255)+','+__r(0,80)+',',
-			loop: true
+			clr: '', //color
 		},
 		_h, //heigth
 		_w, //width
 		_dl = [], //dote list
-		__md = false,
-		__l = console.log,
+		__md = false, //pause
 		_cv = document.createElement('canvas'), //canvas
 		_ct = _cv.getContext('2d'),//context
 		__clr = ()=>{_ct.clearRect(0,0,_w,_h)};
+	_ct.innerHTML = 'Если не грузится, значит браузер не поддерживается...'
 	document.body.appendChild(_cv)
 	window.onresize = __res
 	__int()
@@ -201,8 +231,8 @@ let eWeb = ()=>
 	*/
 	let __crtD = (e) =>
 	{
-		!(_dl.length > 260)&&_prp.mlngth ? _dl.push(new Dote(e)) : __aClr()
-		return _prp.mlngth -= 2	
+		!(_dl.length > 350)&&_prp.mlngth ? _dl.push(new Dote(e)) : __aClr()
+		return _prp.mlngth -= 0.2	
 	}
 	onclick = e =>
 	{
